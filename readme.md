@@ -48,12 +48,11 @@ Use downloaded csv files (created in Exercise 1) containing:<br>
 <code>aws configure</code>
 <br>
 The console will ask for:
-<code>
-AWS Access Key ID [None]: see csv file<br>
-AWS Secret Access Key [None]: see csv file<br>
-Default region name [eu-west-3]:  eu-west-3<br>
-Default output format [json]: json<br>
-</code>
+<br>
+- AWS Access Key ID [None]: see csv file<br>
+- AWS Secret Access Key [None]: see csv file<br>
+- Default region name [eu-west-3]:  eu-west-3<br>
+- Default output format [json]: json<br>
 </details>
 
 <details>

@@ -13,9 +13,11 @@
   
 ##### Solution
 ***AWS UI:***
-- AWS/IAM Dashboard/User/Create User (to generate password (for AWS access) + download csv containing credentials)
-- AWS/IAM Dashboard/User/Jane/Create access key (to generate Access Key ID and Access Key Secret (for console access) + download csv containing credentials)
-- AWS/User Groups/Create Group/ + add Jane to user Group
+- go to AWS/IAM Dashboard/User/Create User <br>
+  also generate password (for AWS UI access) + download csv containing credentials
+- go to AWS/IAM Dashboard/User/Jane/Create access key <br>
+  also  generate Access Key ID and Access Key Secret (for console access) + download csv containing credentials)
+- go to AWS/User Groups/Create Group/ + add Jane to user Group
 - WHERE DID I ADD PERMISSION 'Administrator Access' (in group or user?)
 <br>
 

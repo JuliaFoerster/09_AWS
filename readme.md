@@ -60,9 +60,21 @@ Default output format [json]: json<br>
 <summary>
 EXERCISE 3: Create VPC
 </summary>
+<br>
 You want to create the EC2 Instance in a dedicated VPC, instead of using the default one. So, using the AWS CLI, you:<br>
+<br>
 <ul>
  <li>create a new VPC with 1 subnet </il>
  <li>create a security group in the VPC that will allow you access on ssh port 22 and will allow browser access to your Node application </il>
 </lu>
+
+#### Solution
+<br> 
+- Create VPC: <br> 
+<code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
+Output: vpc-0d903b38f28d30648 <br>
+<br>
+- Create Subnet in VPC: <br>
+<code> aws ec2 create-subnet --vpc-id vpc-0d903b38f28d30648 --cidr-block 10.0.1.0/16 --query Subnet.SubnetId --output text </code>  <br>
+Output: subnet-0006e16700ea86e00 <br> 
 </details>

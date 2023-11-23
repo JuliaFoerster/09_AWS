@@ -11,7 +11,7 @@
 </ul>
   Note: Do that using the AWS UI with Admin User
   
-##### Solution
+##### Solution:
 ***AWS UI:***
 - go to AWS/IAM Dashboard/User/Create User <br>
   also generate password (for AWS UI access) + download csv containing credentials
@@ -25,6 +25,7 @@
 - ToDo
 </details>
 
+
 <details>
 <summary>  EXERCISE 2: Configure AWS CLI
 </summary>
@@ -32,9 +33,9 @@
 You want to use the AWS CLI for the following tasks. So, to be able to interact with the AWS account from the AWS Command Line tool you need to configure it correctly:<br>
 <br>
 - Set credentials for that user for AWS CLI<br>
-- Configure correct region for your AWS CLI<br>
+- Configure correct region for your AWS CLI
 
-##### Solution
+##### Solution:
 Install AWS Client:<br>
 <code>brew install awscli</code><br>
 <br>
@@ -55,6 +56,8 @@ The console will ask for:
 - Default output format [json]: json<br>
 </details>
 
+
+
 <details>
 <summary>
 EXERCISE 3: Create VPC
@@ -67,8 +70,7 @@ You want to create the EC2 Instance in a dedicated VPC, instead of using the def
  <li>create a security group in the VPC that will allow you access on ssh port 22 and will allow browser access to your Node application </il>
 </lu>
 
-#### Solution
-<br> 
+#### Solution:
 - Create VPC: <br> 
 <code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
 Output: vpc-0d903b38f28d30648 <br>
@@ -77,3 +79,28 @@ Output: vpc-0d903b38f28d30648 <br>
 <code> aws ec2 create-subnet --vpc-id vpc-0d903b38f28d30648 --cidr-block 10.0.1.0/16 --query Subnet.SubnetId --output text </code>  <br>
 Output: subnet-0006e16700ea86e00 <br> 
 </details>
+
+
+<details>
+<summary>
+EXERCISE 4: Create EC2 Instance
+</summary>
+<br>
+Once the VPC is created, using the AWS CLI, you:<br>
+Create an EC2 instance in that VPC with the security group you just created and ssh key file<br>
+
+#### Solution: 
+</details>
+
+<details>
+<summary>EXERCISE 5: SSH into the server and install Docker on it
+</summary>
+<br>
+Once the EC2 instance is created successfully, you want to prepare the server to run Docker containers. So you:
+<br>
+- ssh into the server and <br>
+- install Docker on it to run the dockerized application later
+
+#### Solution: 
+</details>
+

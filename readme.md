@@ -88,7 +88,6 @@ IAM/User/Jane/Create Access Key/Download csv file <br>
 <br>
 </details>
 
-
 <details>
 <summary>
 EXERCISE 3: Create VPC
@@ -128,9 +127,8 @@ rtb-01e4614195e247971 <br>
 ##### 7. Create Route rule for handling all traffic between internet & VPC
 <code> aws ec2 create-route --route-table-id rtb-01e4614195e247971 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0943c735026803291 </code>
 
-##### 8.Valide your custom route table has correct configuraton, 1 local and 1 interent gateway routes
-aws ec2 describe-route-tables --route-table-id rtb-01e4614195e247971
-
+##### 8. Valide your custom route table has correct configuraton, 1 local and 1 interent gateway routes
+<code>aws ec2 describe-route-tables --route-table-id rtb-01e4614195e247971</code>
 
     {
     "RouteTables": [
@@ -158,11 +156,9 @@ aws ec2 describe-route-tables --route-table-id rtb-01e4614195e247971
         }
     ]
     }
-
-
-6. Provision EC2 Instance
-7. Create Firewall Rule (Security Group for control traffic on instance level) 
-
+###### 9. Associate subnet with the route table to allow internet traffic in the subnet as well
+<code>aws ec2 associate-route-table  --subnet-id subnet-0dcd59104af3b4016 --route-table-id rtb-01e4614195e247971</code>
+AssociationId": "rtbassoc-0c6d6c4b85d6b0f50"
 
 
 </details>

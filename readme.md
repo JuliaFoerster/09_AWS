@@ -22,8 +22,13 @@
 <br>
 
 ***AWS CLI:*** 
+##### Install AWS Client:<br>
+<code>brew install awscli</code><br>
+###### Check for success:<br>
+<code>awscli --version</code><br>
 ##### Check if admin user has credentials  on my local machibe
 <code> cat ~/.aws/config</code>
+<br>
 ##### Create user
 <code>aws iam create-user --username jane</code>
 ##### Create Group
@@ -33,10 +38,12 @@
 ##### Check if user is in group devops2
 <code>aws iam get-group --group-name devops2</code>
 ##### Give permission (policy) to create EC2 instance to users in group devops2
-###### 1. Find policy identifier (for EC2 and all components under that service)
-<code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonEC2FullAccess`].Arn'</code>
-###### 2. Attach policy (found above) to group
-<code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess</code>
+###### 1. Find policy identifier (for EC2 and VPC and all components under that service)
+<code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonEC2FullAccess`].Arn'</code> <br>
+<code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonVPCFullAccess`].Arn'</code>
+###### 2. Attach policies (found above) to group
+<code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess</code> <br>
+<code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess</code>
 ###### 3. Check
 <code>aws iam list-attached-group-policies --group-name devops2</code>
 </details>
@@ -51,27 +58,35 @@ You want to use the AWS CLI for the following tasks. So, to be able to interact 
 - Set credentials for that user for AWS CLI<br>
 - Configure correct region for your AWS CLI
 
-##### Solution:
-Install AWS Client:<br>
-<code>brew install awscli</code><br>
+###### Solution: AWS UI
+###### 1. Configure password reset after first login
+<code>aws iam create-login-profile --user jane --password <PASSWORD> --password-reset-required</code>
+###### 2. Jane can't reset passwords -> Create permission for Jane
+find policy: <br>
+<code>aws iam list-policies | grep Password</code>
+copy ARN <br>
+"Arn": "arn:aws:iam::aws:policy/IAMUserChangePassword" <br>
+<code>aws iam attach-user-policy --user-name jane --policy-arn arn:aws:iam::aws:policy/IAMUserChangePassword</code>
+###### 3. Login UI + reset password
+using ARN number. <br>
+How to find ARN  number of USER Jane? <br>
+<code>aws iam get-user --user-name jane</code>
+-> arn:aws:iam::197796734648:user/jane
 <br>
-Check for success:<br>
-<code>awscli --version</code><br>
+###### Solution: AWS CLI
+Create Access key ID and Access key Secret for console usage 
+###### 1.Save config file (keys) ~/.aws/credentials of admin user somewhere safe.
+<code> mv ~/.aws/credentials ~/.aws/credentials_admin </code>
+###### 2. Create config file for jane
+<code> aws iam create-access-key --user-name jane > key.txt</code>
 <br>
-Use downloaded csv files (created in Exercise 1) containing:<br>
-- credentials (password) of user jane<br>
-- access key ID and access key secret of user jane<br>
-<br>
+OR via UI <br>
+IAM/User/Jane/Create Access Key/Download csv file <br>
 <code>aws configure</code>
+###### Check credentials:
+<code> cat ~/.aws/credentials</code>
 <br>
-The console will ask for:
-<br>
-- AWS Access Key ID [None]: see csv file<br>
-- AWS Secret Access Key [None]: see csv file<br>
-- Default region name [eu-west-3]:  eu-west-3<br>
-- Default output format [json]: json<br>
 </details>
-
 
 
 <details>

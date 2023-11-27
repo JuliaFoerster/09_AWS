@@ -16,13 +16,29 @@
 - go to AWS/IAM Dashboard/User/Create User <br>
   also generate password (for AWS UI access) + download csv containing credentials
 - go to AWS/IAM Dashboard/User/Jane/Create access key <br>
-  also  generate Access Key ID and Access Key Secret (for console access) + download csv containing credentials)
+  generate Access Key ID and Access Key Secret (for console access) + download csv containing credentials)
 - go to AWS/User Groups/Create Group/ + add Jane to user Group
-- WHERE DID I ADD PERMISSION 'Administrator Access' (in group or user?)
+- add permissions 'EC2FullAccess' to group devops. 
 <br>
 
 ***AWS CLI:*** 
-- ToDo
+##### Check if admin user has credentials  on my local machibe
+<code> cat ~/.aws/config</code>
+##### Create user
+<code>aws iam create-user --username jane</code>
+##### Create Group
+<code>aws iam create-group --group-name devops2</code>
+##### Add user to group
+<code>aws iam add-user-to-group  --user-name jane --group-name devops2</code>
+##### Check if user is in group devops2
+<code>aws iam get-group --group-name devops2</code>
+##### Give permission (policy) to create EC2 instance to users in group devops2
+###### 1. Find policy identifier (for EC2 and all components under that service)
+<code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonEC2FullAccess`].Arn'</code>
+###### 2. Attach policy (found above) to group
+<code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess</code>
+###### 3. Check
+<code>aws iam list-attached-group-policies --group-name devops2</code>
 </details>
 
 

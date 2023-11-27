@@ -102,13 +102,24 @@ You want to create the EC2 Instance in a dedicated VPC, instead of using the def
 </lu>
 
 #### Solution:
-- Create VPC: <br> 
+##### 1. Create VPC: <br> 
 <code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
-Output: vpc-0d903b38f28d30648 <br>
+Output: vpc-04411448155c5c404 <br>
 <br>
-- Create Subnet in VPC: <br>
-<code> aws ec2 create-subnet --vpc-id vpc-0d903b38f28d30648 --cidr-block 10.0.1.0/16 --query Subnet.SubnetId --output text </code>  <br>
-Output: subnet-0006e16700ea86e00 <br> 
+##### 2. Create Subnet in VPC: <br>
+<code> aws ec2 create-subnet --vpc-id vpc-04411448155c5c404 --cidr-block 10.0.1.0/24 --query Subnet.SubnetId --output text </code>  <br>
+Output: subnet-0dcd59104af3b4016 <br>
+<br>
+##### 3. Check: 
+<code>aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-04411448155c5c404"</code>
+<br>
+###### 4. Make EC2 instance available via port 22
+1. Create Route Table and Internet Gateway
+2. Provision EC2 Instance
+3. Create Firewall Rule (Security Group for control traffic on instance level) 
+
+
+
 </details>
 
 

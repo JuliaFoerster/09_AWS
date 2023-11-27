@@ -102,21 +102,66 @@ You want to create the EC2 Instance in a dedicated VPC, instead of using the def
 </lu>
 
 #### Solution:
-##### 1. Create VPC: <br> 
+##### 1. Create VPC:
 <code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
 Output: vpc-04411448155c5c404 <br>
 <br>
-##### 2. Create Subnet in VPC: <br>
+##### 2. Create Subnet in VPC:
 <code> aws ec2 create-subnet --vpc-id vpc-04411448155c5c404 --cidr-block 10.0.1.0/24 --query Subnet.SubnetId --output text </code>  <br>
 Output: subnet-0dcd59104af3b4016 <br>
 <br>
 ##### 3. Check: 
 <code>aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-04411448155c5c404"</code>
 <br>
-###### 4. Make EC2 instance available via port 22
-1. Create Route Table and Internet Gateway
-2. Provision EC2 Instance
-3. Create Firewall Rule (Security Group for control traffic on instance level) 
+##### ====== Make EC2 instance available via port 22 ========
+##### 4. Create Internet Gateway
+<code>aws ec2 create-internet-gateway --query InternetGateway.InternetGatewayId --output text</code>
+igw-0943c735026803291 <br>
+
+##### 5. Attach Internet Gateway to the VPC
+<code> aws ec2 attach-internet-gateway --vpc-id vpc-04411448155c5c404 --internet-gateway-id igw-0943c735026803291 </code>
+
+##### 6. Create Route Table (like a virtual router in our VPC)
+<code>aws ec2 create-route-table --vpc-id vpc-04411448155c5c404 --query RouteTable.RouteTableId --output text</code>
+rtb-01e4614195e247971 <br>
+
+##### 7. Create Route rule for handling all traffic between internet & VPC
+<code> aws ec2 create-route --route-table-id rtb-01e4614195e247971 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0943c735026803291 </code>
+
+##### 8.Valide your custom route table has correct configuraton, 1 local and 1 interent gateway routes
+aws ec2 describe-route-tables --route-table-id rtb-01e4614195e247971
+
+
+    {
+    "RouteTables": [
+        {
+            "Associations": [],
+            "PropagatingVgws": [],
+            "RouteTableId": "rtb-01e4614195e247971",
+            "Routes": [
+                {
+                    "DestinationCidrBlock": "10.0.0.0/16",
+                    "GatewayId": "local",
+                    "Origin": "CreateRouteTable",
+                    "State": "active"
+                },
+                {
+                    "DestinationCidrBlock": "0.0.0.0/0",
+                    "GatewayId": "igw-0943c735026803291",
+                    "Origin": "CreateRoute",
+                    "State": "active"
+                }
+            ],
+            "Tags": [],
+            "VpcId": "vpc-04411448155c5c404",
+            "OwnerId": "197796734648"
+        }
+    ]
+    }
+
+
+6. Provision EC2 Instance
+7. Create Firewall Rule (Security Group for control traffic on instance level) 
 
 
 

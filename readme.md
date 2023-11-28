@@ -11,7 +11,7 @@
 </ul>
   Note: Do that using the AWS UI with Admin User
   
-##### Solution:
+### Solution:
 ***AWS UI:***
 - go to AWS/IAM Dashboard/User/Create User <br>
   also generate password (for AWS UI access) + download csv containing credentials
@@ -22,29 +22,30 @@
 <br>
 
 ***AWS CLI:*** 
-##### Install AWS Client:<br>
+##### 1. Install AWS Client:<br>
 <code>brew install awscli</code><br>
-###### Check for success:<br>
+##### 2. Check for success:<br>
 <code>awscli --version</code><br>
-##### Check if admin user has credentials  on my local machibe
-<code> cat ~/.aws/config</code>
+##### 3. Check if admin user has credentials  on my local machibe
+<code> cat ~/.aws/config</code> <br>
+if not: <code>aws configure</code>
 <br>
-##### Create user
+##### 4. Create user 
 <code>aws iam create-user --username jane</code>
-##### Create Group
+##### 5. Create group 
 <code>aws iam create-group --group-name devops2</code>
-##### Add user to group
+##### 6. Add use to group 
 <code>aws iam add-user-to-group  --user-name jane --group-name devops2</code>
-##### Check if user is in group devops2
+##### 7. Check if user is in group devops2
 <code>aws iam get-group --group-name devops2</code>
-##### Give permission (policy) to create EC2 instance to users in group devops2
-###### 1. Find policy identifier (for EC2 and VPC and all components under that service)
+##### 8. Give permission (policy) to create EC2 instance to users in group 
+###### 8.1 Find policy identifier (for EC2 and VPC and all components under that service)
 <code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonEC2FullAccess`].Arn'</code> <br>
 <code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonVPCFullAccess`].Arn'</code>
-###### 2. Attach policies (found above) to group
+###### 8.2 Attach policies (found above) to group
 <code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess</code> <br>
 <code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess</code>
-###### 3. Check
+###### 8.3 Validate
 <code>aws iam list-attached-group-policies --group-name devops2</code>
 </details>
 
@@ -58,32 +59,32 @@ You want to use the AWS CLI for the following tasks. So, to be able to interact 
 - Set credentials for that user for AWS CLI<br>
 - Configure correct region for your AWS CLI
 
-###### Solution: AWS UI
-###### 1. Configure password reset after first login
+### Solution: AWS UI Access (password)
+##### 1. Configure password reset after first login
 <code>aws iam create-login-profile --user jane --password <PASSWORD> --password-reset-required</code>
-###### 2. Jane can't reset passwords -> Create permission for Jane
+##### 2. Jane can't reset passwords -> Create permission for Jane
 find policy: <br>
 <code>aws iam list-policies | grep Password</code>
 copy ARN <br>
 "Arn": "arn:aws:iam::aws:policy/IAMUserChangePassword" <br>
 <code>aws iam attach-user-policy --user-name jane --policy-arn arn:aws:iam::aws:policy/IAMUserChangePassword</code>
-###### 3. Login UI + reset password
+##### 3. Login UI + reset password
 using ARN number. <br>
 How to find ARN  number of USER Jane? <br>
 <code>aws iam get-user --user-name jane</code>
 -> arn:aws:iam::197796734648:user/jane
 <br>
-###### Solution: AWS CLI
+### Solution: AWS CLI Access (Access Key ID, Access Key Secret)
 Create Access key ID and Access key Secret for console usage 
-###### 1.Save config file (keys) ~/.aws/credentials of admin user somewhere safe.
+##### 1. Save config file (keys) ~/.aws/credentials of admin user somewhere safe.
 <code> mv ~/.aws/credentials ~/.aws/credentials_admin </code>
-###### 2. Create config file for jane
+##### 2. Create config file for user jane
 <code> aws iam create-access-key --user-name jane > key.txt</code>
 <br>
 OR via UI <br>
 IAM/User/Jane/Create Access Key/Download csv file <br>
 <code>aws configure</code>
-###### Check credentials:
+##### 3. Validate credentials:
 <code> cat ~/.aws/credentials</code>
 <br>
 </details>
@@ -100,7 +101,7 @@ You want to create the EC2 Instance in a dedicated VPC, instead of using the def
  <li>create a security group in the VPC that will allow you access on ssh port 22 and will allow browser access to your Node application </il>
 </lu>
 
-#### Solution:
+### Solution:
 ##### 1. Create VPC:
 <code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
 Output: vpc-04411448155c5c404 <br>
@@ -109,7 +110,7 @@ Output: vpc-04411448155c5c404 <br>
 <code> aws ec2 create-subnet --vpc-id vpc-04411448155c5c404 --cidr-block 10.0.1.0/24 --query Subnet.SubnetId --output text </code>  <br>
 Output: subnet-0dcd59104af3b4016 <br>
 <br>
-##### 3. Check: 
+##### 3. Validate: 
 <code>aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-04411448155c5c404"</code>
 <br>
 ##### ====== Make EC2 instance available via port 22 ========
@@ -156,7 +157,7 @@ rtb-01e4614195e247971 <br>
         }
     ]
     }
-###### 9. Associate subnet with the route table to allow internet traffic in the subnet as well
+##### 9. Associate subnet with the route table to allow internet traffic in the subnet as well
 <code>aws ec2 associate-route-table  --subnet-id subnet-0dcd59104af3b4016 --route-table-id rtb-01e4614195e247971</code>
 AssociationId": "rtbassoc-0c6d6c4b85d6b0f50"
 
@@ -172,7 +173,7 @@ EXERCISE 4: Create EC2 Instance
 Once the VPC is created, using the AWS CLI, you:<br>
 Create an EC2 instance in that VPC with the security group you just created and ssh key file<br>
 
-#### Solution: 
+### Solution: 
 </details>
 
 <details>
@@ -184,6 +185,6 @@ Once the EC2 instance is created successfully, you want to prepare the server to
 - ssh into the server and <br>
 - install Docker on it to run the dockerized application later
 
-#### Solution: 
+### Solution: 
 </details>
 

@@ -42,6 +42,12 @@ if not: <code>aws configure</code>
 ###### 8.1 Find policy identifier (for EC2 and VPC and all components under that service)
 <code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonEC2FullAccess`].Arn'</code> <br>
 <code>aws iam list-policies --query 'Policies [?PolicyName==`AmazonVPCFullAccess`].Arn'</code>
+<br>
+or<br
+<code>aws iam list-policies | grep AmazonEC2FullAccess</code><br>
+and<br>
+<code>aws iam list-policies | grep AmazonVPCFullAccess</code>
+
 ###### 8.2 Attach policies (found above) to group
 <code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess</code> <br>
 <code>aws iam attach-group-policy --group-name devops2 --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess</code>

@@ -186,12 +186,30 @@ EXERCISE 4: Create EC2 Instance
 Once the VPC is created, using the AWS CLI, you:<br>
 Create an EC2 instance in that VPC with the security group you just created and ssh key file<br>
 <br>
-aws ec2 create-key-pair --key-name JanesKeyPair --query 'KeyMaterial' --output text>MyKeyPair.pem
-<br>
-aws ec2 run-instances --image-id ami-081dce9b7a9078540 --count 1 --instance-type t2.micro  --key-name MyKeyPair.pem --security-group-id sg-05b422fe026aaaa3e --subnet-id subnet-0dcd59104af3b4016
-<br>
 
 ### Solution: 
+
+ ```sh
+aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text>MyKeyPair.pem
+
+chmod 400 MyKeyPair.pem
+
+aws ec2 run-instances --image-id ami-0302f42a44bf53a45  --count 1 --instance-type t2.micro  --key-name MyKeyPair --security-group-id sg-05b422fe026aaaa3e --subnet-id subnet-0dcd59104af3b4016 --associate-public-ip-address<br></code>
+```
+***Output:***<br>
+instance_id = i-02dbb3020c487be05
+
+``` sh
+#aws ec2 describe-instances --region eu-west-3
+#aws ec2 describe-instances --instance-id i-046b2a2467a10dacc 
+aws ec2 describe-instances --instance-id i-046b2a2467a10dacc  --query "Reservations[*].Instances[*].{State:State.Name,Address:PublicIpAddress}"
+
+```
+
+***Output:***<br>
+"State": "running",<br>
+"Address": "15.237.208.246"<br>         
+
 </details>
 
 <details>
@@ -204,5 +222,37 @@ Once the EC2 instance is created successfully, you want to prepare the server to
 - install Docker on it to run the dockerized application later
 
 ### Solution: 
+
+```sh
+ssh -i MyKeyPair.pem ec2-user@15.237.208.246
+sudo yum update
+sudo yum install docker
+docker version
+sudo service docker start
+```
 </details>
+
+<details>
+  <summary>EXERCISE 6: ToDo Jenkins </summary>
+</details>
+
+<details>
+  <summary>EXERCISE 7: ToDo Jenkins</summary>
+</details>
+
+<details>
+  <summary>EXERCISE 8: Configure access from browser (EC2 Security Group) </summary>
+  <br>
+  After executing the Jenkins pipeline successfully, the application is deployed, but you still can't access it from the browser. You need to open     the correct port on the server. For that, using the AWS CLI, you: <br>
+
+  - Configure the EC2 security group to access your application from a browser<br>
+  
+  ### Solution: 
+  <code>aws ec2 authorize-security-group-ingress --group-id sg-05b422fe026aaaa3e --protocol tcp --port 3000 --cidr 0.0.0.0/0</code>
+</details>
+
+<details>
+  <summary>EXERCISE 9: ToDo Jenkins</summary>
+</details>
+
 

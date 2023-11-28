@@ -63,24 +63,24 @@ You want to use the AWS CLI for the following tasks. So, to be able to interact 
 ##### 1. Configure password reset after first login
 <code>aws iam create-login-profile --user jane --password <PASSWORD> --password-reset-required</code>
 ##### 2. Jane can't reset passwords -> Create permission for Jane
-find policy: <br>
-<code>aws iam list-policies | grep Password</code>
-copy ARN <br>
+find policy ARN : <br>
+<code>aws iam list-policies | grep Password</code><br>
 "Arn": "arn:aws:iam::aws:policy/IAMUserChangePassword" <br>
+<br>
 <code>aws iam attach-user-policy --user-name jane --policy-arn arn:aws:iam::aws:policy/IAMUserChangePassword</code>
 ##### 3. Login UI + reset password
-using ARN number. <br>
-How to find ARN  number of USER Jane? <br>
-<code>aws iam get-user --user-name jane</code>
--> arn:aws:iam::197796734648:user/jane
+Login to UI requires: username, password and user id <br>
+Find user ARN: <br>
+<code>aws iam get-user --user-name jane</code><br>
+"Arn": "arn:aws:iam::197796734648:user/jane"<br>
+<br>
+user id = 197796734648
 <br>
 ### Solution: AWS CLI Access (Access Key ID, Access Key Secret)
-Create Access key ID and Access key Secret for console usage 
 ##### 1. Save config file (keys) ~/.aws/credentials of admin user somewhere safe.
 <code> mv ~/.aws/credentials ~/.aws/credentials_admin </code>
 ##### 2. Create config file for user jane
-<code> aws iam create-access-key --user-name jane > key.txt</code>
-<br>
+<code> aws iam create-access-key --user-name jane > key.txt</code><br>
 OR via UI <br>
 IAM/User/Jane/Create Access Key/Download csv file <br>
 <code>aws configure</code>

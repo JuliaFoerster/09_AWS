@@ -102,6 +102,7 @@ You want to create the EC2 Instance in a dedicated VPC, instead of using the def
 </lu>
 
 ### Solution:
+##### ====== Create VPC and subnet  ========
 ##### 1. Create VPC:
 <code> aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text </code> <br>
 Output: vpc-04411448155c5c404 <br>
@@ -113,22 +114,22 @@ Output: subnet-0dcd59104af3b4016 <br>
 ##### 3. Validate: 
 <code>aws ec2 describe-subnets --filters "Name=vpc-id,Values=vpc-04411448155c5c404"</code>
 <br>
-##### ====== Make EC2 instance available via port 22 ========
-##### 4. Create Internet Gateway
+##### ====== Make  subnet public by attaching a internet gateway  ========
+##### 1. Create Internet Gateway
 <code>aws ec2 create-internet-gateway --query InternetGateway.InternetGatewayId --output text</code>
 igw-0943c735026803291 <br>
 
-##### 5. Attach Internet Gateway to the VPC
+##### 2. Attach Internet Gateway to the VPC
 <code> aws ec2 attach-internet-gateway --vpc-id vpc-04411448155c5c404 --internet-gateway-id igw-0943c735026803291 </code>
 
-##### 6. Create Route Table (like a virtual router in our VPC)
+##### 3. Create Route Table (like a virtual router in our VPC)
 <code>aws ec2 create-route-table --vpc-id vpc-04411448155c5c404 --query RouteTable.RouteTableId --output text</code>
 rtb-01e4614195e247971 <br>
 
-##### 7. Create Route rule for handling all traffic between internet & VPC
+##### 4. Create Route rule for handling all traffic between internet & VPC
 <code> aws ec2 create-route --route-table-id rtb-01e4614195e247971 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-0943c735026803291 </code>
 
-##### 8. Valide your custom route table has correct configuraton, 1 local and 1 interent gateway routes
+##### 5. Valide your custom route table has correct configuraton, 1 local and 1 interent gateway routes
 <code>aws ec2 describe-route-tables --route-table-id rtb-01e4614195e247971</code>
 
     {
@@ -157,11 +158,23 @@ rtb-01e4614195e247971 <br>
         }
     ]
     }
-##### 9. Associate subnet with the route table to allow internet traffic in the subnet as well
+##### 6. Associate subnet with the route table to allow internet traffic in the subnet of our VPC
 <code>aws ec2 associate-route-table  --subnet-id subnet-0dcd59104af3b4016 --route-table-id rtb-01e4614195e247971</code>
 AssociationId": "rtbassoc-0c6d6c4b85d6b0f50"
 
-
+##### ====== Create security group in the VPC to allow access on port 22 ======
+##### 1. Find ID of the VPC created above:<br>
+<code>aws ec2 describe-vpcs</code><br>
+-> vpc-04411448155c5c404<br>
+##### 2. Create Security Group for VPC
+<code>aws ec2 create-security-group --group-name sgjane --description "My Sg" --vpc-id vpc-04411448155c5c404</code><br>
+-> "GroupId": "sg-05b422fe026aaaa3e"<br>
+##### 3. Create Rule to open port 22 for ssh
+Allow access on port 22 from all sources<br>
+<code>aws ec2 authorize-security-group-ingress --group-id sg-05b422fe026aaaa3e --protocol tcp --port 22 --cidr 0.0.0.0/0</code><br>
+-> sgr-0d89f1f54c1cf0b67
+##### 4. Validate ingress rule
+<code>aws ec2  describe-security-groups --group-id sg-05b422fe026aaaa3e</code>
 </details>
 
 

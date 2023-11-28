@@ -185,6 +185,11 @@ EXERCISE 4: Create EC2 Instance
 <br>
 Once the VPC is created, using the AWS CLI, you:<br>
 Create an EC2 instance in that VPC with the security group you just created and ssh key file<br>
+<br>
+aws ec2 create-key-pair --key-name JanesKeyPair --query 'KeyMaterial' --output text>MyKeyPair.pem
+<br>
+aws ec2 run-instances --image-id ami-081dce9b7a9078540 --count 1 --instance-type t2.micro  --key-name MyKeyPair.pem --security-group-id sg-05b422fe026aaaa3e --subnet-id subnet-0dcd59104af3b4016
+<br>
 
 ### Solution: 
 </details>
